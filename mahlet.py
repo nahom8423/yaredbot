@@ -3,6 +3,8 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ui import Button, View
 import logging
+from dotenv import load_dotenv
+load_dotenv()  # This method will load variables from `.env`
 
 # Setup logging to see the debug output
 logging.basicConfig(level=logging.INFO)
@@ -170,3 +172,5 @@ async def button_callback(interaction: discord.Interaction, button_number: int):
 
 
 bot.run('OTcxMjEwMTIzMjQ4ODAzODcy.Gnr9xr.Zmdb_qreJJFWUUxDWqHW5BPkaF--G333MSq-vw')  # Replace with your actual bot token
+import os
+token = os.getenv('DISCORD_BOT_TOKEN')

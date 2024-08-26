@@ -11,9 +11,15 @@ from discord import Embed
 import math
 from discord.ext import tasks
 import subprocess
+from dotenv import load_dotenv
+load_dotenv()  
 
 
 subprocess.Popen(["python3", "date.py"])
+
+import os
+token = os.getenv('DISCORD_BOT_TOKEN')
+
 
 
 TOKEN = 'OTcxMjEwMTIzMjQ4ODAzODcy.Gnr9xr.Zmdb_qreJJFWUUxDWqHW5BPkaF--G333MSq-vw'  # Always keep this secret!
