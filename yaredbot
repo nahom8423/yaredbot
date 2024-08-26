@@ -1,0 +1,200 @@
+# import os
+# import discord
+# from discord.ext import commands, tasks
+# from datetime import datetime
+
+# import requests
+
+# # Define your intents
+# intents = discord.Intents.default()
+# intents.typing = False  # You can customize these based on your bot's requirements
+# intents.presences = False
+
+# TOKEN = 'OTcxMjEwMTIzMjQ4ODAzODcy.Gnr9xr.Zmdb_qreJJFWUUxDWqHW5BPkaF--G333MSq-vw'
+# GUILD_ID = '970490174565928960'
+# CHANNEL_ID = '970857256251953162'  # The ID of the channel where you want to send the picture
+
+
+
+# # List of URLs for each week
+# IMAGE_URLS = [
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/meskerem/01meskerem.pdf',
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/meskerem/02meskerem.pdf',
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/meskerem/03meskerem.pdf',
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenetsige/01meskeremzemenetsige.pdf',
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenetsige/01meskeremzemenetsige.pdf', # 1ST WEEK TSIGE skip nextline
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenetsige/03zemene%20Tsege.pdf', 
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/hidar/04hidarastemehro.pdf', #skip nest line
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenetsige/06zemenetsige.pdf',
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/01zemenesibket.pdf', # 1ST WEEK ስብከት
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/02zemenesibket.pdf',
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/03zemenesibket.pdf',
+#     'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/04lidet.pdf',# skip line
+#     '',
+#     '',
+#     '',
+#     '',
+#     '',
+#     '',
+#     '',
+#     '',
+#     '',
+#     '',
+#     # Add the URLs for all 62 weeks here
+# ]
+
+# bot = commands.Bot(command_prefix='?', intents=intents)
+
+# @bot.event
+# async def on_ready():
+#     print(f'Logged in as {bot.user.name}')
+
+# @bot.command()
+# async def misbak(ctx):
+#     # Check if today is a Monday
+#     today = datetime.today()
+#     if today.weekday() == 0:
+#         for url_index in range(len(IMAGE_URLS)):
+#             await download_and_send_image(ctx, url_index)
+
+# async def download_and_send_image(ctx, url_index):
+#     try:
+#         # Download the PDF or image
+#         response = requests.get(IMAGE_URLS[url_index])
+#         extension = IMAGE_URLS[url_index].split('.')[-1]
+#         file_name = f'image_{url_index + 1}.{extension}'
+#         with open(file_name, 'wb') as file:
+#             file.write(response.content)
+
+#         # Send the image to the specified channel
+#         channel = bot.get_channel(CHANNEL_ID)
+#         await channel.send(file=discord.File(file_name))
+
+#         # Clean up
+#         os.remove(file_name)
+
+#     except Exception as e:
+#         await ctx.send(f'Error: {e}')
+
+        
+
+# bot.run(TOKEN)
+
+
+import os
+import discord
+from discord.ext import commands
+from datetime import datetime
+import requests
+# You'll need to install pdf2image: pip install pdf2image
+from pdf2image import convert_from_path
+
+# Use environment variables or a config file to store these values securely
+TOKEN = 'OTcxMjEwMTIzMjQ4ODAzODcy.Gnr9xr.Zmdb_qreJJFWUUxDWqHW5BPkaF--G333MSq-vw'
+GUILD_ID = '970490174565928960'
+CHANNEL_ID = '970857256251953162'
+
+IMAGE_URLS = [
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/meskerem/01meskerem.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/meskerem/02meskerem.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/meskerem/03meskerem.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenetsige/01meskeremzemenetsige.pdf', # 1ST WEEK TSIGE skip nextline
+    '',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenetsige/03zemene%20Tsege.pdf', 
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenetsige/04zemenetsige.pdf', #skip nest line
+    '',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenetsige/06zemenetsige.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/hidar/01hidarastemehero.pdf', # zeastemiro
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/hidar/02hidar.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/hidar/03hidar.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/hidar/04hidarastemehro.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/01zemenesibket.pdf', # 1ST WEEK ስብከት
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/02zemenesibket.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/03zemenesibket.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/04lidet.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemenesibket/04lidet.pdf',
+    '', # ጥምቀት
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemeneasterio%20tir/Sunday%20After%20Timket.pdf', #thir
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemeneasterio%20tir/secondweekaftertimket.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/zemeneasterio%20tir/Yekatit%20Week%20One.pdf', # yekatit የካቲት
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/lent/01abiytsome.pdf', # ዓቢይ ጾም
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/lent/02abiytsome.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/lent/03abiytsome.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/lent/04abiytsome.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/lent/05abiytsome.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/lent/06abiytsome.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/lent/07abiytsome.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/lent/08abiytsome.pdf', # hosanna
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/tinsaetoerget/09tensae.pdf', # tinsae
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/tinsaetoerget/11dagmaitensae.pdf', #dagim tinsae
+    '',
+    '',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/tinsaetoerget/15weekfouraftertensae.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/tinsaetoerget/16weekfiveaftertensae.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/tinsaetoerget/17weeksixaftertensae.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/tinsaetoerget/18erget.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/peraqlitos/19peraklitossunday.pdf', # ጵራቅሊጦስ
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/peraqlitos/20sundayafteraklitos.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/peraqlitos/21secondsundayafterperaklitos.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/01kiremt.pdf', # ክረምት
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/02kiremt.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/03kiremt.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/04kiremt.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/05Kiremt.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/06kiremt.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/07filseta.pdf', # ፍልሰታ 
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/08filseta.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/09kiremtnehasie%208.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/10kiremt.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/11Kiremtnehasie%2015.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/12Kiremtnehasie%2016.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/13KiremtNehasie%2016%20again.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/14astemhero_Week_1.pdf', # አስተምሮ
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/15Kiremtnehasie%2022.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/16Kiremtnehasie%2023.pdf',
+    'https://www.ethiopianorthodox.org/amharic/holybooks/sundaysmisbakwengel/kiremet/17Kiremtnehasie%2030.pdf',
+    
+#     # Add the URLs for all 62 weeks here
+]
+
+bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name}')
+
+@bot.command()
+async def misbak(ctx):
+    week_number = datetime.now().isocalendar()[1] - 1  # Week starts from 0
+    if week_number < len(IMAGE_URLS) and IMAGE_URLS[week_number]:
+        await download_and_send_image(ctx, week_number)
+    else:
+        await ctx.send('No misbak available for this week.')
+
+async def download_and_send_image(ctx, url_index):
+    try:
+        response = requests.get(IMAGE_URLS[url_index])
+        extension = IMAGE_URLS[url_index].split('.')[-1]
+        file_name = f"document_{url_index + 1}.{extension}"
+
+        with open(file_name, 'wb') as file:
+            file.write(response.content)
+
+        # If the file is a PDF, convert the first page to an image
+        if extension == "pdf":
+            images = convert_from_path(file_name)
+            if images:
+                file_name = f"image_{url_index + 1}.png"
+                images[0].save(file_name, "PNG")
+            else:
+                await ctx.send('Failed to convert PDF to image.')
+                return
+
+        channel = bot.get_channel(int(CHANNEL_ID))
+        await channel.send(file=discord.File(file_name))
+        os.remove(file_name)
+
+    except Exception as e:
+        await ctx.send(f'Error: {e}')
+
+bot.run(TOKEN)
