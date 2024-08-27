@@ -71,13 +71,16 @@ class PaginatedEmbedView(View):
 
 # Define the second set of buttons view
 class SecondButtonsView(View):
-    def __init__(self, button_labels):
+    def __init__(self, button_labels, month_number):
         super().__init__(timeout=180)
+        self.month_number = month_number  # Save the month number
+        
         # Add buttons with specific labels passed in
         for i, label in enumerate(button_labels):
             button = Button(label=label, style=discord.ButtonStyle.secondary)
             button.callback = lambda inter, i=i: self.second_button_callback(inter, i)
             self.add_item(button)
+
     async def second_button_callback(self, interaction: discord.Interaction, button_number: int):
         # Create custom embeds for each button in the second set
         embeds = []
@@ -171,6 +174,7 @@ async def button_callback(interaction: discord.Interaction, button_number: int):
 # Run the bot
 
 
-bot.run('OTcxMjEwMTIzMjQ4ODAzODcy.Gnr9xr.Zmdb_qreJJFWUUxDWqHW5BPkaF--G333MSq-vw')  # Replace with your actual bot token
+# bot.run('OTcxMjEwMTIzMjQ4ODAzODcy.Gnr9xr.Zmdb_qreJJFWUUxDWqHW5BPkaF--G333MSq-vw')  # Replace with your actual bot token
 import os
-token = os.getenv('DISCORD_BOT_TOKEN')
+TOKEN = os.getenv('DISCORD_BOT_TOKEN')
+bot.run(TOKEN)  # Replace with your actual bot token

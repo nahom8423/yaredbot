@@ -18,11 +18,11 @@ load_dotenv()
 subprocess.Popen(["python3", "date.py"])
 
 import os
-token = os.getenv('DISCORD_BOT_TOKEN')
+TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 
 
 
-TOKEN = 'OTcxMjEwMTIzMjQ4ODAzODcy.Gnr9xr.Zmdb_qreJJFWUUxDWqHW5BPkaF--G333MSq-vw'  # Always keep this secret!
+# TOKEN = 'OTcxMjEwMTIzMjQ4ODAzODcy.Gnr9xr.Zmdb_qreJJFWUUxDWqHW5BPkaF--G333MSq-vw'  # Always keep this secret!
 GUILD_ID = '970490174565928960'
 
 # Allowed channels for the misbak command
